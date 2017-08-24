@@ -125,28 +125,30 @@ namespace PSG_List_Sweep
                     sourceFreqs[i] = 2e6 + 40e6 * ((double)i);
                 }
 
-                double[] dwelltime = new double[] { 0.01, 0.02, 0.03, 0.04, 0.05 };
+                double[] dwelltime = new [] { 0.01, 0.02, 0.03, 0.04, 0.05 };
 
                 drvr.Sweep.List.Reset();
                
                 drvr.Sweep.List.CreateFrequencyPower(listName, ref sourceFreqs, ref sourceAmpls);
-                drvr.Sweep.List.ConfigureDwell(false, dwelltime[2]);
+                drvr.Sweep.List.ConfigureDwell(false, dwelltime[0]);
                 drvr.Sweep.TriggerSource = IviRFSigGenSweepTriggerSourceEnum.IviRFSigGenSweepTriggerSourceImmediate;
 
            
-                Console.WriteLine("Select second list to sweep freq & power");
+                Console.WriteLine("Select list to sweep freq & power");
                 drvr.Sweep.List.SelectedName = listName;
 
                 Console.WriteLine("Turn sweep off");
                 drvr.Sweep.Mode = IviRFSigGenSweepModeEnum.IviRFSigGenSweepModeNone;
                 Console.WriteLine("Turn sweep on");
                 drvr.Sweep.Mode = IviRFSigGenSweepModeEnum.IviRFSigGenSweepModeList;
-               
-                drvr.Sweep.List.Dwell = dwelltime[2];
+                foreach (double value in dwelltime)
+                {
+                    drvr.Sweep.List.Dwell = value; 
+                }
                 // read selected properties
                 string selList = drvr.Sweep.List.SelectedName;
                 bool ssEnable = drvr.Sweep.List.SingleStepEnabled;
-                double dwell = drvr.Sweep.List.Dwell;
+               // double dwell = drvr.Sweep.List.Dwell;
 
                 // clean up
                 drvr.Sweep.Mode = IviRFSigGenSweepModeEnum.IviRFSigGenSweepModeNone;
